@@ -31,6 +31,7 @@ Below is the structure of a Circular Singly Linked List:
 Node 1 (head) -> Node 2 -> Node 3 -> Node 4 -> (back to head)
 
 
+
 ### Code
 
 ```javascript
@@ -113,3 +114,93 @@ cll.traverse(); // Output: 10 -> 20 -> 30
 
 cll.deleteByValue(20);
 cll.traverse(); // Output: 10 -> 30
+````
+---
+## Implementation of Circular Doubly Linked List
+
+### Diagram
+
+### Code
+
+```javascript
+class DoublyNode {
+  constructor(data) {
+    this.data = data;
+    this.next = null;
+    this.prev = null;
+  }
+}
+
+class CircularDoublyLinkedList {
+  constructor() {
+    this.head = null;
+  }
+
+  // Insert at the end
+  insertAtEnd(data) {
+    const newNode = new DoublyNode(data);
+    if (!this.head) {
+      this.head = newNode;
+      newNode.next = newNode;
+      newNode.prev = newNode;
+    } else {
+      const tail = this.head.prev;
+      tail.next = newNode;
+      newNode.prev = tail;
+      newNode.next = this.head;
+      this.head.prev = newNode;
+    }
+  }
+
+  // Delete a node by value
+  deleteByValue(value) {
+    if (!this.head) return;
+
+    let current = this.head;
+
+    do {
+      if (current.data === value) {
+        const prev = current.prev;
+        const next = current.next;
+
+        if (current === this.head) {
+          if (this.head.next === this.head) {
+            // Single node case
+            this.head = null;
+            return;
+          }
+          this.head = next;
+        }
+
+        prev.next = next;
+        next.prev = prev;
+
+        return;
+      }
+      current = current.next;
+    } while (current !== this.head);
+  }
+
+  // Traverse the list
+  traverse() {
+    if (!this.head) return;
+    let temp = this.head;
+    const result = [];
+    do {
+      result.push(temp.data);
+      temp = temp.next;
+    } while (temp !== this.head);
+    console.log(result.join(" <-> "));
+  }
+}
+
+// Example Usage
+const cdll = new CircularDoublyLinkedList();
+
+cdll.insertAtEnd(10);
+cdll.insertAtEnd(20);
+cdll.insertAtEnd(30);
+cdll.traverse(); // Output: 10 <-> 20 <-> 30
+
+cdll.deleteByValue(20);
+cdll.traverse(); // Output: 10 <-> 30
